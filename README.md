@@ -1,7 +1,48 @@
 # 8_1
+
+Установил ansible:
+```
+pashi@pashi-docker:~/GolandProjects/8_1$ ansible --version
+ansible [core 2.13.7]
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/pashi/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /home/pashi/.local/lib/python3.8/site-packages/ansible
+  ansible collection location = /home/pashi/.ansible/collections:/usr/share/ansible/collections
+  executable location = /home/pashi/.local/bin/ansible
+  python version = 3.8.10 (default, Nov 14 2022, 12:59:47) [GCC 9.4.0]
+  jinja version = 3.1.2
+  libyaml = True
+pashi@pashi-docker:~/GolandProjects/8_1$ ansible -m ping localhost
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
 ## Основная часть
 * Попробуйте запустить playbook на окружении из test.yml, зафиксируйте какое значение имеет факт some_fact для указанного хоста при выполнении playbook'a.
+Запустил
+```
+pashi@pashi-docker:~/GolandProjects/8_1$ ansible-playbook -i playbook/inventory/test.yml playbook/site.yml 
 
+PLAY [Print os facts] *****************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Print OS] ***********************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *********************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": 12
+}
+
+PLAY RECAP ****************************************************************************************************************************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
 * Найдите файл с переменными (group_vars) в котором задаётся найденное в первом пункте значение и поменяйте его на 'all default fact'.
   
 * Воспользуйтесь подготовленным (используется docker) или создайте собственное окружение для проведения дальнейших испытаний.
