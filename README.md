@@ -264,14 +264,101 @@ pashi@pashi-docker:~/GolandProjects/8_1$
 
 ## Необязательная часть
 
-* При помощи ansible-vault расшифруйте все зашифрованные файлы с переменными.
-    
-* Зашифруйте отдельное значение PaSSw0rd для переменной some_fact паролем netology. Добавьте полученное значение в group_vars/all/exmp.yml.
+1.  При помощи ansible-vault расшифруйте все зашифрованные файлы с переменными.  
+    Расшифровал `ansible-vault decrypt playbook/group_vars/deb/examp.yml` 
+2. Зашифруйте отдельное значение PaSSw0rd для переменной some_fact паролем netology. Добавьте полученное значение в group_vars/all/exmp.yml.  
+  Зашифровал `ansible-vault encrypt_string`.
+3. Запустите playbook, убедитесь, что для нужных хостов применился новый fact.  
+   Добавил, проверил:
+```
+pashi@pashi-docker:~/GolandProjects/8_1$ ansible-playbook -i playbook/inventory/prod.yml playbook/site.yml --ask-vault-pass
+Vault password: 
+
+PLAY [Print os facts] *****************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************************
+ok: [localhost]
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] ***********************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *********************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+ok: [localhost] => {
+    "msg": "PaSSw0rd"
+}
+
+PLAY RECAP ****************************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+```
+4. Добавьте новую группу хостов fedora, самостоятельно придумайте для неё переменную. В качестве образа можно использовать этот.  
+  Добавил. Проверил:
+```
+pashi@pashi-docker:~/GolandProjects/8_1$ ansible-playbook -i playbook/inventory/prod.yml playbook/site.yml --ask-vault-pass
+Vault password: 
+
+PLAY [Print os facts] *****************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************************
+ok: [localhost]
+ok: [fedora]
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] ***********************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+ok: [fedora] => {
+    "msg": "Fedora"
+}
+
+TASK [Print fact] *********************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+ok: [fedora] => {
+    "msg": "fedora default fact"
+}
+ok: [localhost] => {
+    "msg": "PaSSw0rd"
+}
+
+PLAY RECAP ****************************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+fedora                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
+5. Напишите скрипт на bash: автоматизируйте поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
   
-* Запустите playbook, убедитесь, что для нужных хостов применился новый fact.
-  
-* Добавьте новую группу хостов fedora, самостоятельно придумайте для неё переменную. В качестве образа можно использовать этот.
-  
-* Напишите скрипт на bash: автоматизируйте поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
-  
-* Все изменения должны быть зафиксированы и отправлены в вашей личный репозиторий.
+6. Все изменения должны быть зафиксированы и отправлены в вашей личный репозиторий.
